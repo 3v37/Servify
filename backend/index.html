@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro - Servify</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .main-title {
+      font-size: 48px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
+
+    .form-container {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #FFD700;
+      border-radius: 5px;
+      background-color: #222;
+      color: #FFD700;
+    }
+
+    input[type="file"] {
+      padding: 5px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #FFA500;
+      box-shadow: 0 0 5px rgba(255, 165, 0, 0.7);
+    }
+
+    .submit-btn {
+      background-color: #FFD700;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      background-color: #FFA500;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="main-title">Servify</h1>
+
+  <div class="form-container">
+    <h1>Registro</h1>
+    <form id="registrationForm">
+      <div class="form-group">
+        <label for="image">Imagen</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+      </div>
+      <div class="form-group">
+        <label for="presentation">Presentación</label>
+        <input type="text" id="presentation" name="presentation" placeholder="Escribe tu presentación" required>
+      </div>
+      <div class="form-group">
+        <label for="category">Categoría</label>
+        <select id="category" name="category" required>
+          <option value="">Selecciona una categoría</option>
+          <option value="servicios-personales">Servicios Personales</option>
+          <option value="electricidad">Electricidad</option>
+          <option value="fontanería">Fontanería</option>
+          <option value="limpieza">Limpieza</option>
+          <option value="técnico-informático">Técnico Informático</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="contact">Contacto</label>
+        <input type="tel" id="contact" name="contact" placeholder="Escribe tu número de contacto" required>
+      </div>
+      <button type="submit" class="submit-btn">Registrarse</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Recopilar datos del formulario
+      const image = document.getElementById('image').files[0];
+      const presentation = document.getElementById('presentation').value;
+      const category = document.getElementById('category').value;
+      const contact = document.getElementById('contact').value;
+
+      if (!image || !presentation || !category || !contact) {
+        alert('Por favor, completa todos los campos.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('image', image);
+      formData.append('presentation', presentation);
+      formData.append('category', category);
+      formData.append('contact', contact);
+
+      try {
+        const response = await fetch('http://localhost:5000/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          alert('Registro enviado con éxito.');
+        } else {
+          alert('Error al enviar el registro.');
+        }
+      } catch (error) {
+        console.error('Error en la conexión:', error);
+        alert('Hubo un problema al conectar con el servidor.');
+      }
+    });
+  </script>
+</body>
+</html>
